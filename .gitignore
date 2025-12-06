@@ -1,0 +1,32 @@
+# Node modules
+node_modules/
+server/node_modules/
+web/node_modules/
+
+# Environment files
+.env
+.env.local
+server/.env
+web/.env
+
+# Build output
+dist/
+build/
+web/dist/
+server/build/
+out/
+
+# Logs
+*.log
+logs/
+
+# IDE & system files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Temp/cache
+.tmp/
+.cache/
+coverage/
