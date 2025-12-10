@@ -1,4 +1,4 @@
-import logo from '../assets/logo.png'; // غيّر المسار إذا كان في مكان آخر
+import logo from '../assets/logo.png'; 
 
 function Navbar() {
   return (

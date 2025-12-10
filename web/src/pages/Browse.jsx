@@ -20,31 +20,22 @@ export default function Browse() {
   });
   const [filtersLoading, setFiltersLoading] = React.useState(true);
 
-  // القيم المختارة
   const [selected, setSelected] = React.useState({
     level_id: '',
     stage_id: '',
     science_id: '',
     subject_id: '',
-    material_id: '',
   });
 
-  const [materials, setMaterials] = React.useState([]);
-  const [materialsLoading, setMaterialsLoading] = React.useState(false);
-
-  // بحث نصي + وسوم
   const [q, setQ] = React.useState('');
   const [tagsInput, setTagsInput] = React.useState('');
 
-  // النتائج
   const [rows, setRows] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
 
-  // مودال التفاصيل
   const [open, setOpen] = React.useState(false);
   const [active, setActive] = React.useState(null);
 
-  /* --------------------------- تحميل الفلاتر --------------------------- */
   React.useEffect(() => {
     (async () => {
       try {
@@ -58,8 +49,6 @@ export default function Browse() {
     })();
   }, []);
 
-  /* ----------------------- stages/subjects حسب الاختيار ----------------------- */
-
   const stagesForLevel = React.useMemo(() => {
     if (!selected.level_id) return filters.stages;
     const lid = Number(selected.level_id);
@@ -72,40 +61,6 @@ export default function Browse() {
     return filters.subjects.filter((s) => s.science_ids?.includes(sid));
   }, [filters.subjects, selected.science_id]);
 
-  /* --------------------------- تحميل المواد حسب الفلاتر --------------------------- */
-  React.useEffect(() => {
-    if (!filters.stages.length && !filters.sciences.length) return;
-    (async () => {
-      try {
-        setMaterialsLoading(true);
-        const params = new URLSearchParams();
-        if (selected.level_id) params.set('level_id', selected.level_id);
-        if (selected.stage_id) params.set('stage_id', selected.stage_id);
-        if (selected.science_id) params.set('science_id', selected.science_id);
-        if (selected.subject_id) params.set('subject_id', selected.subject_id);
-
-        const url = `${API}/public/materials${
-          params.toString() ? `?${params.toString()}` : ''
-        }`;
-        const data = await getJson(url);
-        setMaterials(Array.isArray(data) ? data : []);
-      } catch (e) {
-        console.error('materials error', e);
-        setMaterials([]);
-      } finally {
-        setMaterialsLoading(false);
-      }
-    })();
-  }, [
-    selected.level_id,
-    selected.stage_id,
-    selected.science_id,
-    selected.subject_id,
-    filters.stages.length,
-    filters.sciences.length,
-  ]);
-
-  /* --------------------------- تحميل الموارد (النتائج) --------------------------- */
   async function loadResources() {
     try {
       setLoading(true);
@@ -115,7 +70,6 @@ export default function Browse() {
       if (selected.stage_id) params.set('stage_id', selected.stage_id);
       if (selected.science_id) params.set('science_id', selected.science_id);
       if (selected.subject_id) params.set('subject_id', selected.subject_id);
-      if (selected.material_id) params.set('material_id', selected.material_id);
 
       const tags = tagsInput
         .split(',')
@@ -138,26 +92,21 @@ export default function Browse() {
   }
 
   React.useEffect(() => {
-    // تحميل مبدئي بدون فلاتر
     loadResources();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  /* --------------------------- تصفير الفلاتر --------------------------- */
   function resetFilters() {
     setSelected({
       level_id: '',
       stage_id: '',
       science_id: '',
       subject_id: '',
-      material_id: '',
     });
     setQ('');
     setTagsInput('');
     setRows([]);
   }
-
-  /* --------------------------- UI --------------------------- */
 
   const activeUrl =
     active?.external_url || active?.file_url || active?.url || '';
@@ -165,7 +114,6 @@ export default function Browse() {
 
   return (
     <section className="grid gap-6">
-      {/* صندوق الفلاتر */}
       <div className="card p-4">
         <div className="flex items-center justify-between mb-3">
           <h2 className="font-bold text-lg">تصفية الموارد</h2>
@@ -184,8 +132,7 @@ export default function Browse() {
           <div className="text-slate-500 text-sm">جارِ تحميل بيانات الفلاتر…</div>
         ) : (
           <>
-            <div className="grid gap-3 md:grid-cols-5">
-              {/* المستوى */}
+            <div className="grid gap-3 md:grid-cols-4">
               <div>
                 <label className="text-xs text-slate-500">المستوى</label>
                 <select
@@ -196,7 +143,6 @@ export default function Browse() {
                       ...s,
                       level_id: e.target.value,
                       stage_id: '',
-                      material_id: '',
                     }))
                   }
                 >
@@ -209,7 +155,6 @@ export default function Browse() {
                 </select>
               </div>
 
-              {/* المرحلة */}
               <div>
                 <label className="text-xs text-slate-500">المرحلة</label>
                 <select
@@ -219,7 +164,6 @@ export default function Browse() {
                     setSelected((s) => ({
                       ...s,
                       stage_id: e.target.value,
-                      material_id: '',
                     }))
                   }
                 >
@@ -232,7 +176,6 @@ export default function Browse() {
                 </select>
               </div>
 
-              {/* العلم */}
               <div>
                 <label className="text-xs text-slate-500">العلم</label>
                 <select
@@ -243,7 +186,6 @@ export default function Browse() {
                       ...s,
                       science_id: e.target.value,
                       subject_id: '',
-                      material_id: '',
                     }))
                   }
                 >
@@ -256,7 +198,6 @@ export default function Browse() {
                 </select>
               </div>
 
-              {/* المقرر */}
               <div>
                 <label className="text-xs text-slate-500">المقرر</label>
                 <select
@@ -266,7 +207,6 @@ export default function Browse() {
                     setSelected((s) => ({
                       ...s,
                       subject_id: e.target.value,
-                      material_id: '',
                     }))
                   }
                   disabled={!filters.subjects.length}
@@ -279,31 +219,8 @@ export default function Browse() {
                   ))}
                 </select>
               </div>
-
-              {/* المادة (Course) */}
-              <div>
-                <label className="text-xs text-slate-500">المادة</label>
-                <select
-                  className="select"
-                  value={selected.material_id}
-                  onChange={(e) =>
-                    setSelected((s) => ({ ...s, material_id: e.target.value }))
-                  }
-                  disabled={materialsLoading || !materials.length}
-                >
-                  <option value="">
-                    {materialsLoading ? 'جارِ التحميل…' : 'كل المواد'}
-                  </option>
-                  {materials.map((m) => (
-                    <option key={m.id} value={m.id}>
-                      {m.title}
-                    </option>
-                  ))}
-                </select>
-              </div>
             </div>
 
-            {/* سطر ثانٍ: بحث/وسوم + الأزرار */}
             <div className="mt-4 grid gap-3 md:grid-cols-[2fr,2fr,auto,auto]">
               <div>
                 <label className="text-xs text-slate-500">
@@ -348,7 +265,6 @@ export default function Browse() {
         )}
       </div>
 
-      {/* النتائج */}
       {loading && (
         <div className="text-slate-500 text-sm">جارِ تحميل النتائج…</div>
       )}
@@ -364,7 +280,6 @@ export default function Browse() {
               key={r.id}
               item={{
                 ...r,
-                // تطبيع للـ props القديمة
                 url: r.external_url || r.file_url || r.url,
                 mime_type: r.mime || r.mime_type,
               }}
@@ -377,7 +292,6 @@ export default function Browse() {
         </div>
       )}
 
-      {/* معاينة المورد */}
       <Modal
         open={open}
         onClose={() => setOpen(false)}
@@ -421,4 +335,3 @@ export default function Browse() {
     </section>
   );
 }
-

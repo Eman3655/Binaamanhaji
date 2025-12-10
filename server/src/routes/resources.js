@@ -4,7 +4,6 @@ import adminGuard from '../middleware/adminGuard.js';
 
 const router = Router();
 
-// POST /api/resources  (x-admin-secret)
 router.post('/resources', adminGuard, async (req, res) => {
   try {
     const { title, type, url, description, mime_type, size_bytes,

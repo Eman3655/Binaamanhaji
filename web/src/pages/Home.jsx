@@ -3,7 +3,6 @@ import { useEffect, useRef, useLayoutEffect, useState } from "react";
 import { ArrowRight, FolderOpen, ShieldCheck, Search, Layers, BookOpen, FileText } from "lucide-react";
 import heroImg from "../assets/background.jpg";
 
-/* ===================== النصوص والبيانات ===================== */
 const copy = {
   hero: {
     titleTop: "البناء المنهجي",
@@ -54,10 +53,8 @@ function Feature({ icon: Icon, title, desc }) {
 }
 
 
-/* ===================== HERO (الصورة كما هي) ===================== */
 function HeroLanding() {
   return (
-    // full-bleed + full-viewport height
     <section
       className="
         relative overflow-hidden
@@ -65,21 +62,17 @@ function HeroLanding() {
         ml-[calc(50%-50vw)] mr-[calc(50%-50vw)]
       "
     >
-      {/* الخلفية كما هي */}
       <img
         src={heroImg}
         alt="خلفية المنصة"
         className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none"
       />
 
-      {/* طبقات تعتيم بسيطة لقراءة النص */}
       <div className="absolute inset-0 bg-black/40" />
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/30 to-black/70" />
 
-      {/* المحتوى (مُتمركز عموديًا داخل الارتفاع الكامل) */}
       <div className="relative z-10 h-full">
         <div className="h-full mx-auto max-w-7xl px-4 flex flex-col items-center justify-center text-center text-white">
-          {/* شارات */}
           <div className="mb-5 flex flex-wrap justify-center gap-2">
             <span className="rounded-full px-3 py-1 text-xs font-medium bg-white/10 ring-1 ring-white/20 backdrop-blur">
               الدفعة الثالثة – دفعة العطاء
@@ -89,7 +82,6 @@ function HeroLanding() {
             </span>
           </div>
 
-          {/* عنوان ووصف */}
           <h1 className="text-4xl md:text-6xl font-extrabold leading-tight drop-shadow-lg max-w-5xl">
             منصّة <span className="text-emerald-400">البناء المنهجي</span> لتجميع ملفات الدراسة
           </h1>
@@ -99,7 +91,6 @@ function HeroLanding() {
             ونوفّر بحثًا سريعًا حسب المستوى والعِلم والمقرّر — لتصل إلى النسخة الصحيحة في ثوانٍ.
           </p>
 
-          {/* أزرار */}
           <div className="mt-10 flex flex-wrap justify-center gap-4">
             <a
               href="/browse"
@@ -120,15 +111,11 @@ function HeroLanding() {
   );
 }
 
-
-/* ===================== الصفحة الكاملة ===================== */
 export default function Home() {
   return (
-    // تتبع لايت/دارك من body والمتغيرات التي في index.css
     <main className="min-h-screen bg-[var(--bg)] text-[var(--text)] relative overflow-hidden">
       <HeroLanding />
 
-      {/* شبكة الميزات */}
       <section id="browse" className="mx-auto max-w-7xl px-4 py-16">
         <div className="grid md:grid-cols-3 gap-6">
           {copy.grid.map((f, i) => {
@@ -138,7 +125,6 @@ export default function Home() {
         </div>
       </section>
 
- {/* الخطوات */}
 <section className="mx-auto max-w-7xl px-4 pb-16">
   <div className="rounded-3xl px-6 py-8 md:px-10 md:py-12 ring-1 ring-slate-200/70 dark:ring-slate-800 bg-white dark:bg-slate-900">
     <h2 className="text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-slate-100">
@@ -198,7 +184,6 @@ export default function Home() {
 </section>
 
 
-      {/* تذييل */}
       <footer className="mx-auto max-w-7xl px-4 pb-10 text-sm text-slate-600 dark:text-slate-400 flex items-center justify-between border-t border-slate-200 dark:border-slate-800 pt-6">
         <span>© {new Date().getFullYear()} البناء المنهجي</span>
         <div className="flex gap-4">

@@ -23,7 +23,6 @@ export default function Library(){
     return (text||'').toLowerCase().includes(q.toLowerCase());
   }
 
-  // الصفحة الأولى: تمهيدي + مستويات
   if (!level && !stage){
     return (
       <Layout>
@@ -47,7 +46,6 @@ export default function Library(){
     );
   }
 
-  // صفحة المستوى: قائمة مراحل
   if (level && !stage){
     return (
       <Layout>
@@ -65,7 +63,6 @@ export default function Library(){
     );
   }
 
-  // صفحة المرحلة: مواد + موارد
   if (level && stage){
     const subjects = stage.subjects?.filter(s=>matchQuery(s.name)) || [];
     const resources = stage.resources?.filter(r=>matchQuery(r.title||r.description)) || [];

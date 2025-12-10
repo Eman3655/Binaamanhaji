@@ -1,9 +1,6 @@
-// middleware/adminGuard.js
 import jwt from 'jsonwebtoken';
 
-const {
-  ADMIN_TOKEN_SECRET = 'change_me_please',
-} = process.env;
+const { ADMIN_TOKEN_SECRET = 'change_me_please' } = process.env;
 
 export default function adminGuard(req, res, next) {
   const token = req.cookies?.admin_token;
@@ -14,12 +11,13 @@ export default function adminGuard(req, res, next) {
     if (payload?.role !== 'admin') {
       return res.status(403).json({ error: 'Forbidden' });
     }
-    req.admin = payload; 
+    req.admin = payload;
     next();
   } catch (e) {
     return res.status(401).json({ error: 'Invalid token' });
   }
 }
+
 
 
 

@@ -10,7 +10,7 @@ export default function FileDropzone({ onUploaded, uploader }) {
     setErr(''); setBusy(true);
     try {
       const f = fs[0];
-      const res = await uploader?.(f); // يُعاد { url, mime, size }
+      const res = await uploader?.(f); 
       if (res?.url) onUploaded?.(res);
     } catch (e) {
       setErr(e?.message || 'فشل الرفع');

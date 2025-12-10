@@ -1,4 +1,3 @@
-// استخدام الكوكيز فقط، بدون x-admin-secret
 const API = import.meta.env.VITE_API_BASE || "http://localhost:4000/api";
 
 export async function adminFetch(path, options = {}) {

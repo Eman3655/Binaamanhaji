@@ -64,7 +64,6 @@ export default function Shell({ children }) {
           <Typography sx={{ flexGrow: 1, fontWeight: 700 }}>بناء منهجي</Typography>
           <Tooltip title="تبديل الوضع">
             <IconButton onClick={colorMode.toggle}>
-              {/* سنختبر خلفية الصفحة لعرض الأيقونة المناسبة */}
               <LightModeIcon sx={{ display: { xs: "none" } }} />
               <DarkModeIcon sx={{ display: { xs: "none" } }} />
             </IconButton>
@@ -72,7 +71,6 @@ export default function Shell({ children }) {
         </Toolbar>
       </AppBar>
 
-      {/* Drawer */}
       {isMdUp ? (
         <Drawer variant="permanent" open
           sx={{ width: drawerWidth, flexShrink: 0,
@@ -85,13 +83,12 @@ export default function Shell({ children }) {
         </Drawer>
       )}
 
-      {/* المحتوى */}
       <Box component="main" sx={{
         flexGrow: 1,
         px: { xs: 2, md: 4 },
         py: { xs: 10, md: 12 },
         ml: { md: 0 },
-        mr: { md: drawerWidth },  // لأن الـ Drawer على اليمين في RTL
+        mr: { md: drawerWidth },  
         maxWidth: 1400,
         width: "100%",
         mx: "auto",

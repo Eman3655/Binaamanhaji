@@ -4,7 +4,6 @@ import { Link, useLocation } from "react-router-dom";
 
 const API = import.meta.env.VITE_API_BASE || "http://localhost:4000/api";
 
-/* أيقونات شمس/قمر (بيضاء) */
 function IconSun({ className = "w-5 h-5" }) {
   return (
     <svg
@@ -68,7 +67,6 @@ export default function Layout({ children }) {
 
   return (
     <div className="min-h-screen bg-[var(--bg)] text-[var(--text)]">
-      {/* Navbar أسود دائمًا */}
       <header
         className="
           sticky top-0 z-30 isolate
@@ -79,7 +77,6 @@ export default function Layout({ children }) {
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <div className="flex h-16 items-center gap-3">
-            {/* زر القائمة للموبايل */}
             <button
               onClick={() => setOpen(true)}
               className="md:hidden rounded-xl p-2 ring-1 ring-white/10 bg-white/[0.06] hover:bg-white/[0.12]"
@@ -90,7 +87,6 @@ export default function Layout({ children }) {
               </svg>
             </button>
 
-            {/* الشعار + اسم الموقع */}
             <Link to="/" className="flex items-center gap-2">
               <div className="size-9 rounded-full bg-emerald-400/15 ring-1 ring-emerald-400/30 flex items-center justify-center">
                 <svg viewBox="0 0 64 64" className="w-5 h-5" aria-hidden="true">
@@ -107,13 +103,11 @@ export default function Layout({ children }) {
             </Link>
             
 
-            {/* روابط يمين + زر الثيم أسود */}
             <nav className="ml-auto hidden md:flex items-center gap-2" aria-label="التنقل الرئيسي">
               <NavLink to="/">الرئيسية</NavLink>
               <NavLink to="/browse">تصفّح</NavLink>
               <NavLink to="/admin">الإدارة</NavLink>
 
-              {/* زر تبديل الثيم: خلفية سوداء، الأيقونة بيضاء */}
               <button
                 onClick={() => setDark((d) => !d)}
                 className="size-9 rounded-full bg-black ring-1 ring-white/15 flex items-center justify-center hover:bg-black/90 transition"
@@ -127,7 +121,6 @@ export default function Layout({ children }) {
         </div>
       </header>
 
-      {/* Drawer (موبايل) — داكن دائمًا */}
       
       <div
 
@@ -161,7 +154,6 @@ export default function Layout({ children }) {
             <NavLink to="/">الرئيسية</NavLink>
             <NavLink to="/browse">تصفّح</NavLink>
             <NavLink to="/admin">الإدارة</NavLink>
-                        {/* زر الثيم للموبايل: أسود + أيقونة بيضاء */}
             <button
               onClick={() => setDark((d) => !d)}
               className="mt-3 size-10 rounded-full bg-black ring-1 ring-white/15 flex items-center justify-center hover:bg-black/90 transition"
@@ -175,7 +167,6 @@ export default function Layout({ children }) {
         
       </div>
 
-      {/* المحتوى: الصفحة الرئيسية بلا حاوية؛ غيرها داخل حاوية */}
       <main className="py-0">
         {pathname === "/" ? (
           children

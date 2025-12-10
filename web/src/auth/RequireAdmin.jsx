@@ -17,15 +17,12 @@ export default function RequireAdmin({ children }) {
           credentials: 'include',
           signal: ctrl.signal,
         });
-        // 200 مع {ok:true} = جلسة صحيحة
-        // 200 مع {ok:false} = لا جلسة
-        // 401 = لا جلسة
+   
         const data = await res.json().catch(() => ({}));
         if (!ctrl.signal.aborted) {
           setState({ loading: false, ok: !!data?.ok });
         }
       } catch {
-        // لو فشل الشبكة، جرّب مرة ثانية بسرعة قبل الطرد
         if (!triedOnceRef.current) {
           triedOnceRef.current = true;
           setTimeout(checkOnce, 250);

@@ -10,21 +10,17 @@ import { Readable } from 'node:stream';
 dotenv.config();
 
 const app = express();
-
 app.set('trust proxy', 1);
 
 const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN;
 
+const ALLOWED_ORIGINS = [CLIENT_ORIGIN, 'http://localhost:5173', 'http://localhost:3000'].filter(Boolean);
+
 app.use(cors({
-  origin(origin, callback) {
-    if (!origin) return callback(null, true);
-
-    const isLocalhost = /^https?:\/\/localhost(:\d+)?$/.test(origin);
-
-    const isClient = CLIENT_ORIGIN && origin === CLIENT_ORIGIN;
-
-    if (isLocalhost || isClient) return callback(null, true);
-    return callback(new Error('Not allowed by CORS'));
+  origin(origin, cb) {
+    if (!origin) return cb(null, true);
+    if (ALLOWED_ORIGINS.includes(origin)) return cb(null, true);
+    return cb(new Error('Not allowed by CORS'));
   },
   credentials: true,
   methods: ['GET','POST','PUT','DELETE','OPTIONS'],
