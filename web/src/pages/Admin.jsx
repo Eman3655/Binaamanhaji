@@ -183,7 +183,6 @@ function FileDropzone({ onUploaded, uploader }) {
 }
 
 
-/* ===================== ResourceDrawer (محدّث) ===================== */
 function ResourceDrawer({
   open,
   onClose,
@@ -209,7 +208,6 @@ function ResourceDrawer({
     ...(initial || {}),
   });
 
-  // اختيارات محلية للمستوى/المرحلة/العلم/المقرر داخل النموذج
   const [pick, setPick] = React.useState({
     level_id: '',
     stage_id: '',
@@ -217,13 +215,11 @@ function ResourceDrawer({
     subject_id: '',
   });
 
-  // قائمة المقررات (تتحدث حسب pick)
   const [subjectOptions, setSubjectOptions] = React.useState([]);
   const [subjLoading, setSubjLoading] = React.useState(false);
 
   React.useEffect(() => { if (initial) setF((s) => ({ ...s, ...initial })); }, [initial]);
 
-  // عند فتح النموذج: جهّز pick من scope الخارجي
   React.useEffect(() => {
     if (open) {
       const init = {
@@ -236,7 +232,6 @@ function ResourceDrawer({
     }
   }, [open, scope.level_id, scope.stage_id, scope.science_id, scope.subject_id]);
 
-  // منع سكرول الخلفية
   React.useEffect(() => {
     if (open) {
       const prev = document.body.style.overflow;
@@ -245,7 +240,6 @@ function ResourceDrawer({
     }
   }, [open]);
 
-  // تحميل المقررات حسب الفلاتر الحالية
   const loadSubjectsByFilters = React.useCallback(async (p) => {
     const params = new URLSearchParams();
     if (p.level_id)   params.set('level_id', p.level_id);
@@ -264,12 +258,10 @@ function ResourceDrawer({
     }
   }, []);
 
-  // كلما تغيّر pick (level/stage/science) حمّل المقررات
   React.useEffect(() => {
     loadSubjectsByFilters(pick);
   }, [pick.level_id, pick.stage_id, pick.science_id, loadSubjectsByFilters]);
 
-  // مستويات/مراحل/علوم من الفلاتر القادمة من الأب (تتحدث فورًا عبر reloadFilters)
   const levels   = filters?.levels   || [];
   const stages   = filters?.stages   || [];
   const sciences = filters?.sciences || [];
@@ -308,12 +300,10 @@ function ResourceDrawer({
         <div className="flex-1 overflow-y-auto p-4 grid gap-3" style={{ WebkitOverflowScrolling: 'touch', overscrollBehavior: 'contain' }}>
           <Input placeholder="العنوان *" value={f.title} onChange={(e) => setF((s) => ({ ...s, title: e.target.value }))} />
 
-          {/* النوع */}
           <Select value={f.type} onChange={(e) => setF((s) => ({ ...s, type: e.target.value }))}>
             {RESOURCE_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
           </Select>
 
-          {/* المستوى / المرحلة / العلم */}
           <div className="grid gap-2 md:grid-cols-3">
             <Select
               value={pick.level_id}
@@ -343,7 +333,6 @@ function ResourceDrawer({
             </Select>
           </div>
 
-          {/* المقرر (يتحدّث حسب الاختيارات) */}
           <Select
             value={pick.subject_id}
             onChange={(e) => setPick((s) => ({ ...s, subject_id: e.target.value }))}
@@ -388,7 +377,6 @@ function ResourceDrawer({
   );
 }
 
-/* ===================== StructurePanel (يُنادي onChanged بعد أي تعديل) ===================== */
 function StructurePanel({ toast, onChanged }) {
   const [tab, setTab] = React.useState('levels');
   const [levels, setLevels] = React.useState([]);
@@ -616,7 +604,6 @@ function StructurePanel({ toast, onChanged }) {
   );
 }
 
-/* ===================== ResourcesPanel (يمرر filters و reloadFilters) ===================== */
 function ResourcesPanel({ scope, subjects, toast, filters, reloadFilters }) {
   const [state, setState] = React.useState({ rows: [], loading: true, q: '' });
   const [open, setOpen] = React.useState(false);
@@ -713,7 +700,6 @@ function ResourcesPanel({ scope, subjects, toast, filters, reloadFilters }) {
   );
 }
 
-/* ===================== Admin (يحمّل الفلاتر ويعيد تحميلها بعد أي تعديل) ===================== */
 export default function Admin() {
   const nav = useNavigate();
   const { Toasts, push } = useToasts();
