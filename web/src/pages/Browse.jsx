@@ -13,7 +13,7 @@ async function getJson(url) {
 }
 
 const SORTS = [
-  { id: 'relevance', label: 'الملاءمة' },
+  { id: 'relevance', label: 'حسب الفلترة' },
   { id: 'newest', label: 'الأحدث' },
   { id: 'az', label: 'أبجديًا' },
 ];
@@ -172,7 +172,7 @@ export default function Browse() {
     !!tagsInput;
 
   return (
-    <section className="grid grid-cols-1 lg:grid-cols-[minmax(280px,300px),1fr] gap-8">
+<section className="grid grid-cols-1 lg:grid-cols-[minmax(280px,300px),1fr] gap-8 items-start">
       <aside className="card p-4 h-fit lg:sticky lg:top-4 lg:max-h-[calc(100vh-2rem)] overflow-auto rounded-2xl border border-slate-200/60 dark:border-slate-800/60">
         <div className="flex items-center justify-between mb-3">
           <h2 className="font-bold text-lg">تصفية الموارد</h2>
@@ -204,9 +204,9 @@ export default function Browse() {
             <Input label="بحث نصّي" value={q} onChange={(e) => setQ(e.target.value)} placeholder="عنوان، كاتب، كلمة مفتاحية…" />
             <div><label className="text-xs text-slate-500">وسوم</label><TagsInput value={tagsInput} onChange={setTagsInput} /></div>
 
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-2 ">
               <button onClick={resetFilters} className="btn btn-outline">مسح الكل</button>
-              <select className="select" value={sort} onChange={(e) => setSort(e.target.value)}>
+              <select className="select w-full border-slate-300 focus:ring-2 focus:ring-green-200 focus:border-green-300 hover:border-green-300 transition-all" value={sort} onChange={(e) => setSort(e.target.value)}>
                 {SORTS.map(s => <option key={s.id} value={s.id}>{s.label}</option>)}
               </select>
             </div>
@@ -214,7 +214,7 @@ export default function Browse() {
         )}
       </aside>
 
-      <div className="grid gap-4 pt-0">
+<div className="grid gap-4 pt-0 self-start">
         {hasChips && (
           <div className="flex flex-wrap gap-2">
             {Object.entries(selected).map(([k, v]) =>
@@ -343,9 +343,18 @@ function Select({ label, options, value, onChange, placeholder, disabled }) {
   return (
     <div>
       <label className="text-xs text-slate-500">{label}</label>
-      <select className="select w-full" value={value} onChange={onChange} disabled={disabled}>
+      <select
+        className="select w-full border-slate-300 focus:ring-2 focus:ring-green-200 focus:border-green-300 hover:border-green-300 transition-all"
+        value={value}
+        onChange={onChange}
+        disabled={disabled}
+      >
         <option value="">{placeholder}</option>
-        {options.map((o) => <option key={o.id} value={o.id}>{o.name}</option>)}
+        {options.map((o) => (
+          <option key={o.id} value={o.id}>
+            {o.name}
+          </option>
+        ))}
       </select>
     </div>
   );
@@ -355,10 +364,16 @@ function Input({ label, value, onChange, placeholder }) {
   return (
     <div>
       <label className="text-xs text-slate-500">{label}</label>
-      <input className="input w-full" value={value} onChange={onChange} placeholder={placeholder} />
+      <input
+        className="input w-full border-slate-300 focus:ring-2 focus:ring-green-200 focus:border-green-300 hover:border-green-300 transition-all"
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+      />
     </div>
   );
 }
+
 
 function FiltersSkeleton() {
   return (

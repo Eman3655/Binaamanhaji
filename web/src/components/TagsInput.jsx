@@ -36,18 +36,19 @@ export default function TagsInput({ value, onChange, placeholder = 'أدخل و�
           </span>
         ))}
       </div>
-      <input
-        className="input w-full"
-        placeholder={placeholder}
-        value={input}
-        onChange={e => setInput(e.target.value)}
-        onKeyDown={e => {
-          if (e.key === 'Enter') {
-            e.preventDefault();
-            addTag();
-          }
-        }}
-      />
+<input
+  className="input w-full border-slate-300 focus:ring-2 focus:ring-green-200 focus:border-green-300 hover:border-green-300 transition-all"
+  placeholder={placeholder}
+  value={input}
+  onChange={e => setInput(e.target.value)}
+  onKeyDown={e => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      addTag();
+    }
+  }}
+/>
+
     </div>
   );
 }

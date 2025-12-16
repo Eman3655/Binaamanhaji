@@ -150,7 +150,7 @@ function FileDropzone({ onUploaded, uploader }) {
     setBusy(true);
     try {
       const f = fs[0];
-      const res = await uploader?.(f); 
+      const res = await uploader?.(f);
       if (res?.url) onUploaded?.(res);
     } catch (e) {
       setErr(e?.message || 'فشل الرفع');
@@ -183,6 +183,7 @@ function FileDropzone({ onUploaded, uploader }) {
 }
 
 
+/* ===================== ResourceDrawer (محدّث) ===================== */
 function ResourceDrawer({
   open,
   onClose,
@@ -192,10 +193,13 @@ function ResourceDrawer({
   scope = {},
   setScope,
   uploader,
+  // جديد:
+  filters,
+  reloadFilters,
 }) {
   const [f, setF] = React.useState({
     title: '',
-    type: 'SUMMARY', 
+    type: 'SUMMARY',
     description: '',
     file_url: '',
     external_url: '',
@@ -205,8 +209,34 @@ function ResourceDrawer({
     ...(initial || {}),
   });
 
+  // اختيارات محلية للمستوى/المرحلة/العلم/المقرر داخل النموذج
+  const [pick, setPick] = React.useState({
+    level_id: '',
+    stage_id: '',
+    science_id: '',
+    subject_id: '',
+  });
+
+  // قائمة المقررات (تتحدث حسب pick)
+  const [subjectOptions, setSubjectOptions] = React.useState([]);
+  const [subjLoading, setSubjLoading] = React.useState(false);
+
   React.useEffect(() => { if (initial) setF((s) => ({ ...s, ...initial })); }, [initial]);
 
+  // عند فتح النموذج: جهّز pick من scope الخارجي
+  React.useEffect(() => {
+    if (open) {
+      const init = {
+        level_id: scope.level_id || '',
+        stage_id: scope.stage_id || '',
+        science_id: scope.science_id || '',
+        subject_id: scope.subject_id || '',
+      };
+      setPick(init);
+    }
+  }, [open, scope.level_id, scope.stage_id, scope.science_id, scope.subject_id]);
+
+  // منع سكرول الخلفية
   React.useEffect(() => {
     if (open) {
       const prev = document.body.style.overflow;
@@ -215,14 +245,43 @@ function ResourceDrawer({
     }
   }, [open]);
 
+  // تحميل المقررات حسب الفلاتر الحالية
+  const loadSubjectsByFilters = React.useCallback(async (p) => {
+    const params = new URLSearchParams();
+    if (p.level_id)   params.set('level_id', p.level_id);
+    if (p.stage_id)   params.set('stage_id', p.stage_id);
+    if (p.science_id) params.set('science_id', p.science_id);
+
+    setSubjLoading(true);
+    try {
+      const rows = await j(`${API}/public/subjects-by-filters?${params.toString()}`);
+      setSubjectOptions(rows || []);
+    } catch (e) {
+      console.error(e);
+      setSubjectOptions([]);
+    } finally {
+      setSubjLoading(false);
+    }
+  }, []);
+
+  // كلما تغيّر pick (level/stage/science) حمّل المقررات
+  React.useEffect(() => {
+    loadSubjectsByFilters(pick);
+  }, [pick.level_id, pick.stage_id, pick.science_id, loadSubjectsByFilters]);
+
+  // مستويات/مراحل/علوم من الفلاتر القادمة من الأب (تتحدث فورًا عبر reloadFilters)
+  const levels   = filters?.levels   || [];
+  const stages   = filters?.stages   || [];
+  const sciences = filters?.sciences || [];
+
   const RESOURCE_TYPES = [
     'ORIGINAL',
-    'SUMMARY',        
-    'TRANSCRIPT',    
-    'TABLE',         
-    'TREE',           
-    'COURSE_LINK',   
-    'AUDIO',          
+    'SUMMARY',
+    'TRANSCRIPT',
+    'TABLE',
+    'TREE',
+    'COURSE_LINK',
+    'AUDIO',
     'SLIDES',
     'IMAGE',
     'EXERCISES',
@@ -249,19 +308,49 @@ function ResourceDrawer({
         <div className="flex-1 overflow-y-auto p-4 grid gap-3" style={{ WebkitOverflowScrolling: 'touch', overscrollBehavior: 'contain' }}>
           <Input placeholder="العنوان *" value={f.title} onChange={(e) => setF((s) => ({ ...s, title: e.target.value }))} />
 
+          {/* النوع */}
           <Select value={f.type} onChange={(e) => setF((s) => ({ ...s, type: e.target.value }))}>
             {RESOURCE_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
           </Select>
 
+          {/* المستوى / المرحلة / العلم */}
+          <div className="grid gap-2 md:grid-cols-3">
+            <Select
+              value={pick.level_id}
+              onChange={(e) => setPick((s) => ({ ...s, level_id: e.target.value, stage_id: '', subject_id: '' }))}
+            >
+              <option value="">— اختر مستوى —</option>
+              {levels.map((l) => <option key={l.id} value={l.id}>{l.name}</option>)}
+            </Select>
+
+            <Select
+              value={pick.stage_id}
+              onChange={(e) => setPick((s) => ({ ...s, stage_id: e.target.value, subject_id: '' }))}
+              disabled={!pick.level_id}
+            >
+              <option value="">— اختر مرحلة —</option>
+              {stages
+                .filter(st => !pick.level_id || st.level_id === Number(pick.level_id))
+                .map((st) => <option key={st.id} value={st.id}>{st.name}</option>)}
+            </Select>
+
+            <Select
+              value={pick.science_id}
+              onChange={(e) => setPick((s) => ({ ...s, science_id: e.target.value, subject_id: '' }))}
+            >
+              <option value="">— اختر علم —</option>
+              {sciences.map((sc) => <option key={sc.id} value={sc.id}>{sc.name}</option>)}
+            </Select>
+          </div>
+
+          {/* المقرر (يتحدّث حسب الاختيارات) */}
           <Select
-            value={scope.subject_id || ''}
-            onChange={(e) => setScope((s) => ({ ...s, subject_id: e.target.value }))}
+            value={pick.subject_id}
+            onChange={(e) => setPick((s) => ({ ...s, subject_id: e.target.value }))}
           >
-            <option value="">— اختر مقرر —</option>
-            {subjects.map((su) => (
-              <option key={su.id} value={su.id}>
-                {su.name}
-              </option>
+            <option value="">{subjLoading ? '…جارِ التحميل' : '— اختر مقرر —'}</option>
+            {subjectOptions.map((su) => (
+              <option key={su.id} value={su.id}>{su.name}</option>
             ))}
           </Select>
 
@@ -287,9 +376,9 @@ function ResourceDrawer({
           <Btn
             onClick={() => {
               if (!f.title) return alert('العنوان مطلوب');
-              if (!scope.subject_id) return alert('اختر مقررًا');
-              const subject_id = Number(scope.subject_id);
-              onSubmit?.({ ...f, subject_id });
+              if (!pick.subject_id) return alert('اختر مقررًا');
+              const payload = { ...f, subject_id: Number(pick.subject_id) };
+              onSubmit?.(payload);
             }}
           >حفظ</Btn>
           <Btn variant="ghost" onClick={onClose}>إلغاء</Btn>
@@ -299,8 +388,9 @@ function ResourceDrawer({
   );
 }
 
-function StructurePanel({ toast }) {
-  const [tab, setTab] = React.useState('levels'); 
+/* ===================== StructurePanel (يُنادي onChanged بعد أي تعديل) ===================== */
+function StructurePanel({ toast, onChanged }) {
+  const [tab, setTab] = React.useState('levels');
   const [levels, setLevels] = React.useState([]);
   const [stages, setStages] = React.useState([]);
   const [sciences, setSciences] = React.useState([]);
@@ -342,12 +432,12 @@ function StructurePanel({ toast }) {
     if (!levelName.trim()) return;
     try {
       await j(`${API}/admin/levels`, { method: 'POST', body: JSON.stringify({ name: levelName.trim() }) });
-      setLevelName(''); toast('تمت إضافة المستوى', 'ok'); reload();
+      setLevelName(''); toast('تمت إضافة المستوى', 'ok'); reload(); onChanged?.();
     } catch (e) { toast(e.message || 'فشل إضافة المستوى', 'err'); }
   }
   async function deleteLevel(id) {
     if (!window.confirm('حذف هذا المستوى؟ قد يسبّب مشاكل في البيانات.')) return;
-    try { await j(`${API}/admin/levels/${id}`, { method: 'DELETE' }); toast('تم الحذف', 'ok'); reload(); }
+    try { await j(`${API}/admin/levels/${id}`, { method: 'DELETE' }); toast('تم الحذف', 'ok'); reload(); onChanged?.(); }
     catch (e) { toast(e.message || 'فشل حذف المستوى', 'err'); }
   }
 
@@ -356,12 +446,12 @@ function StructurePanel({ toast }) {
     if (!stageName.trim() || !lid) return;
     try {
       await j(`${API}/admin/stages`, { method: 'POST', body: JSON.stringify({ level_id: lid, name: stageName.trim() }) });
-      setStageName(''); toast('تمت إضافة المرحلة', 'ok'); reload();
+      setStageName(''); toast('تمت إضافة المرحلة', 'ok'); reload(); onChanged?.();
     } catch (e) { toast(e.message || 'فشل إضافة المرحلة', 'err'); }
   }
   async function deleteStage(id) {
     if (!window.confirm('حذف هذه المرحلة؟')) return;
-    try { await j(`${API}/admin/stages/${id}`, { method: 'DELETE' }); toast('تم الحذف', 'ok'); reload(); }
+    try { await j(`${API}/admin/stages/${id}`, { method: 'DELETE' }); toast('تم الحذف', 'ok'); reload(); onChanged?.(); }
     catch (e) { toast(e.message || 'فشل حذف المرحلة', 'err'); }
   }
 
@@ -369,12 +459,12 @@ function StructurePanel({ toast }) {
     if (!scienceName.trim()) return;
     try {
       await j(`${API}/admin/sciences`, { method: 'POST', body: JSON.stringify({ name: scienceName.trim() }) });
-      setScienceName(''); toast('تمت إضافة العلم', 'ok'); reload();
+      setScienceName(''); toast('تمت إضافة العلم', 'ok'); reload(); onChanged?.();
     } catch (e) { toast(e.message || 'فشل إضافة العلم', 'err'); }
   }
   async function deleteScience(id) {
     if (!window.confirm('حذف هذا العلم؟')) return;
-    try { await j(`${API}/admin/sciences/${id}`, { method: 'DELETE' }); toast('تم الحذف', 'ok'); reload(); }
+    try { await j(`${API}/admin/sciences/${id}`, { method: 'DELETE' }); toast('تم الحذف', 'ok'); reload(); onChanged?.(); }
     catch (e) { toast(e.message || 'فشل حذف العلم', 'err'); }
   }
 
@@ -389,12 +479,12 @@ function StructurePanel({ toast }) {
     try {
       await j(`${API}/admin/subjects`, { method: 'POST', body: JSON.stringify(payload) });
       setSubjectName('');
-      toast('تمت إضافة المقرر', 'ok'); reload();
+      toast('تمت إضافة المقرر', 'ok'); reload(); onChanged?.();
     } catch (e) { toast(e.message || 'فشل إضافة المقرر', 'err'); }
   }
   async function deleteSubject(id) {
     if (!window.confirm('حذف هذا المقرر؟')) return;
-    try { await j(`${API}/admin/subjects/${id}`, { method: 'DELETE' }); toast('تم الحذف', 'ok'); reload(); }
+    try { await j(`${API}/admin/subjects/${id}`, { method: 'DELETE' }); toast('تم الحذف', 'ok'); reload(); onChanged?.(); }
     catch (e) { toast(e.message || 'فشل حذف المقرر', 'err'); }
   }
 
@@ -526,7 +616,8 @@ function StructurePanel({ toast }) {
   );
 }
 
-function ResourcesPanel({ scope, subjects, toast }) {
+/* ===================== ResourcesPanel (يمرر filters و reloadFilters) ===================== */
+function ResourcesPanel({ scope, subjects, toast, filters, reloadFilters }) {
   const [state, setState] = React.useState({ rows: [], loading: true, q: '' });
   const [open, setOpen] = React.useState(false);
 
@@ -614,11 +705,15 @@ function ResourcesPanel({ scope, subjects, toast }) {
           toast('تم الحفظ', 'ok');
           load();
         }}
+        // جديد:
+        filters={filters}
+        reloadFilters={reloadFilters}
       />
     </section>
   );
 }
 
+/* ===================== Admin (يحمّل الفلاتر ويعيد تحميلها بعد أي تعديل) ===================== */
 export default function Admin() {
   const nav = useNavigate();
   const { Toasts, push } = useToasts();
@@ -634,12 +729,18 @@ export default function Admin() {
     level_id: '', stage_id: '', science_id: '', subject_id: '',
   });
 
-  React.useEffect(() => {
-    (async () => {
-      try { setFilters(await j(`${API}/admin/_filters`)); }
-      catch (e) { console.error(e); }
-    })();
+  const reloadFilters = React.useCallback(async () => {
+    try {
+      const data = await j(`${API}/admin/_filters`);
+      setFilters(data);
+    } catch (e) {
+      console.error(e);
+    }
   }, []);
+
+  React.useEffect(() => {
+    reloadFilters();
+  }, [reloadFilters]);
 
   const subjectsFiltered = React.useMemo(() => {
     return filters.subjects.filter(su =>
@@ -732,9 +833,10 @@ export default function Admin() {
       </aside>
 
       <main className="grid gap-6">
-        <StructurePanel toast={push} />
-        <ResourcesPanel scope={scope} subjects={subjectsFiltered} toast={push} />
+        <StructurePanel toast={push} onChanged={reloadFilters} />
+        <ResourcesPanel scope={scope} subjects={subjectsFiltered} toast={push} filters={filters} reloadFilters={reloadFilters} />
       </main>
     </div>
   );
 }
+
