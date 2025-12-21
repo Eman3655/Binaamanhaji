@@ -49,21 +49,37 @@ export default function Layout({ children }) {
 
   const NavLink = ({ to, children: label }) => {
     const active = isActive(to);
+
     return (
       <Link
         to={to}
         onClick={() => setOpen(false)}
         className={[
-          "flex items-center gap-2 rounded-xl px-3 py-2 transition",
+          "relative flex items-center gap-2 px-3 py-2 transition",
           "text-slate-300 hover:text-white",
-          active ? "bg-white/[0.06] ring-1 ring-white/15 text-white" : "",
+
+          active
+            ? "text-emerald-300"
+            : "",
         ].join(" ")}
         aria-current={active ? "page" : undefined}
       >
         {label}
+
+        <span
+          aria-hidden="true"
+          className={[
+            "pointer-events-none absolute left-3 right-3 -bottom-[2px] h-[2px] rounded-full",
+            "transition-opacity duration-200",
+            active
+              ? "opacity-100 bg-emerald-300 shadow-[0_0_12px_rgba(110,231,183,0.85)]"
+              : "opacity-0",
+          ].join(" ")}
+        />
       </Link>
     );
   };
+
 
   return (
     <div className="min-h-screen bg-[var(--bg)] text-[var(--text)]">

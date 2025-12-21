@@ -17,21 +17,36 @@ export default function ResourceCard({ item, onOpen, compact = false }) {
 
   const icon = isPdf ? 'PDF' : '🔗';
 
+  const glow =
+    `transition-all duration-300 
+     hover:border-emerald-300/70 dark:hover:border-emerald-300/45
+     hover:shadow-[0_0_0_3px_rgba(110,231,183,0.18),0_16px_50px_rgba(0,0,0,0.18)]
+     dark:hover:shadow-[0_0_0_3px_rgba(110,231,183,0.12),0_16px_50px_rgba(0,0,0,0.45)]
+     hover:-translate-y-0.5`;
+
+  const glowActive = open
+    ? `border-emerald-300/70 dark:border-emerald-300/45
+       shadow-[0_0_0_3px_rgba(110,231,183,0.18),0_16px_50px_rgba(0,0,0,0.18)]
+       dark:shadow-[0_0_0_3px_rgba(110,231,183,0.12),0_16px_50px_rgba(0,0,0,0.45)]`
+    : '';
+
   if (!compact) {
     const h = open ? 'h-[260px]' : 'h-[150px]';
     return (
       <div
-        className={`rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/50 overflow-hidden transition-all duration-300 ${h}`}
+        className={`rounded-2xl border border-slate-200 dark:border-slate-800
+        bg-white/70 dark:bg-slate-900/50 overflow-hidden ${glow} ${glowActive} ${h}`}
       >
         <div className="p-3 grid grid-rows-[auto,1fr,auto] gap-2 h-full">
           <div className="flex items-start gap-3">
-        <div
-          className={`size-10 shrink-0 rounded-xl grid place-items-center ${
-            isPdf ? 'bg-red-50 text-red-600' : 'bg-sky-50 text-sky-600'
-          } dark:bg-slate-800`}
-        >
-          {icon}
-        </div>
+            <div
+              className={`size-10 shrink-0 rounded-xl grid place-items-center ${
+                isPdf ? 'bg-red-50 text-red-600' : 'bg-sky-50 text-sky-600'
+              } dark:bg-slate-800`}
+            >
+              {icon}
+            </div>
+
             <div className="flex-1 min-w-0">
               <div className="font-semibold leading-snug line-clamp-2 text-slate-800 dark:text-slate-100" title={item.title}>
                 {item.title}
@@ -71,14 +86,18 @@ export default function ResourceCard({ item, onOpen, compact = false }) {
 
   const h = open ? 'h-[140px]' : 'h-[90px]';
   return (
-    <div className={`grid grid-cols-[auto,1fr,auto] items-start gap-3 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/60 dark:bg-slate-900/60 overflow-hidden transition-all duration-300 ${h}`}>
-       <div
-          className={`size-10 shrink-0 rounded-xl grid place-items-center ${
-            isPdf ? 'bg-red-50 text-red-600' : 'bg-sky-50 text-sky-600'
-          } dark:bg-slate-800`}
-        >
-          {icon}
-        </div>
+    <div
+      className={`grid grid-cols-[auto,1fr,auto] items-start gap-3 px-3 py-2 rounded-xl
+      border border-slate-200 dark:border-slate-800 bg-white/60 dark:bg-slate-900/60
+      overflow-hidden ${glow} ${glowActive} ${h}`}
+    >
+      <div
+        className={`size-10 shrink-0 rounded-xl grid place-items-center ${
+          isPdf ? 'bg-red-50 text-red-600' : 'bg-sky-50 text-sky-600'
+        } dark:bg-slate-800`}
+      >
+        {icon}
+      </div>
 
       <div className="min-w-0">
         <div className="font-semibold leading-snug truncate text-slate-800 dark:text-slate-100" title={item.title}>
@@ -114,5 +133,6 @@ export default function ResourceCard({ item, onOpen, compact = false }) {
     </div>
   );
 }
+
 
 
