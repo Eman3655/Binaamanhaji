@@ -5,7 +5,7 @@ import heroImg from "../assets/background.jpg";
 
 const copy = {
   hero: {
-    titleTop: "البناء المنهجي",
+    titleTop: "مكتبة البناء المنهجي",
     titleAccent: "دفعة العطاء — الدفعة الثالثة",
     sub: "منصة تجمع ملفات الدروس والمقررات والملخصات من مصادرها الموثوقة، توحّد الإصدارات، وتنظمها لتسهيل الوصول السريع والدقيق.",
     ctaPrimary: "استعرض المقررات",
@@ -16,17 +16,17 @@ const copy = {
     { icon: Layers,     title: "توحيد الإصدارات",  desc: "نسخة مرجعية ثابتة لكل ملف/درس." },
     { icon: Search,     title: "وصول سريع",        desc: "بحث وفلترة ذكية بحسب العلم والمقرر." },
     { icon: BookOpen,   title: "هيكلة منهجية",     desc: "تقسيم حسب العلوم والمستويات والفصول." },
-    { icon: ShieldCheck,title: "توثيق موثوق",      desc: "إحالة للمصدر وتاريخ الإصدار والمراجعة." },
+    { icon: ShieldCheck,title: "مساهمة في إثراء الأرشيف",      desc: "ساهم في إثراء الأرشيف المنهجي الموحّد." },
     { icon: FileText,   title: "ملخصات مركّزة",    desc: "تلخيصات ونقاط أساسية للرجوع السريع." },
   ],
   roadmap: {
     title: "كيف تستفيد بسرعة؟",
     steps: [
       { k: "1", t: "اختر العلم والمقرر",   d: "ابدأ من العلم أو المستوى المناسب لك." },
-      { k: "2", t: "حمّل النسخة المعتمدة", d: "ملف موحّد وواضح الإصدار والمصدر." },
+      { k: "2", t: "حمّل النسخة", d: "حمل النسخة المناسبة من المقررات." },
       { k: "3", t: "أضف / اقترح ملفًا",    d: "ساهم في إثراء الأرشيف المنهجي الموحّد." },
     ],
-    button: "انتقل إلى الأرشيف المنظَّم",
+    button: "انتقل إلى الأرشيف المنظَّم",
   },
 };
 
@@ -83,11 +83,11 @@ function HeroLanding() {
           </div>
 
           <h1 className="text-4xl md:text-6xl font-extrabold leading-tight drop-shadow-lg max-w-5xl">
-            منصّة <span className="text-emerald-400">البناء المنهجي</span> لتجميع ملفات الدراسة
+            منصّة <span className="text-emerald-400">مكتبة البناء المنهجي</span> لتجميع ملفات الدراسة
           </h1>
 
           <p className="mt-5 text-lg md:text-xl text-white/95 max-w-3xl leading-relaxed">
-            نجمع الدروس والمقرّرات والملخّصات من مصادرها الموثوقة، نوحّد الإصدارات،
+            نجمع الدروس والمقرّرات والملخّصات من مصادرها الموثوقة، 
             ونوفّر بحثًا سريعًا حسب المستوى والعِلم والمقرّر — لتصل إلى النسخة الصحيحة في ثوانٍ.
           </p>
 
@@ -185,12 +185,12 @@ export default function Home() {
 
 
       <footer className="mx-auto max-w-7xl px-4 pb-10 text-sm text-slate-600 dark:text-slate-400 flex items-center justify-between border-t border-slate-200 dark:border-slate-800 pt-6">
-        <span>© {new Date().getFullYear()} البناء المنهجي</span>
+        <span>© {new Date().getFullYear()} مكتبة البناء المنهجي</span>
         <div className="flex gap-4">
-          <a className="hover:text-sky-600 dark:hover:text-sky-400" href="#">
+          <a className="hover:text-sky-600 dark:hover:text-sky-400">
             الخصوصية
           </a>
-          <a className="hover:text-sky-600 dark:hover:text-sky-400" href="#">
+          <a className="hover:text-sky-600 dark:hover:text-sky-400">
             الشروط
           </a>
         </div>

@@ -30,7 +30,6 @@ export default function AdminLogin() {
         return;
       }
 
-      // تأكيد تثبيت الجلسة
       try {
         const me = await fetch(`${API}/admin/me`, { credentials: "include" });
         const data = await me.json().catch(() => ({}));

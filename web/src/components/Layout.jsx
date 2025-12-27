@@ -114,7 +114,7 @@ export default function Layout({ children }) {
                 </svg>
               </div>
               <div className="text-lg font-semibold tracking-tight text-white">
-                البناء المنهجي
+                مكتبة البناء المنهجي
               </div>
             </Link>
             

@@ -1,16 +1,31 @@
 <!doctype html>
-<html lang="ar" dir="rtl" class="dark">
+<html lang="ar" dir="rtl">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>البناء المنهجي</title>
+    <title>مكتبة البناء المنهجي</title>
     <link rel="icon" type="image/svg+xml" href="./src/assets/logo.png" />
-<meta name="theme-color" content="#157347" />
 
+    <meta id="theme-color" name="theme-color" content="#157347" />
+
+    <script>
+      (function () {
+        try {
+          const ls = localStorage.getItem('theme');
+          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          const dark = ls ? ls === 'dark' : prefersDark;
+
+          document.documentElement.classList.toggle('dark', dark);
+          document.documentElement.style.colorScheme = dark ? 'dark' : 'light';
+
+          var meta = document.getElementById('theme-color');
+          if (meta) meta.setAttribute('content', dark ? '#0b1220' : '#ffffff');
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
-
