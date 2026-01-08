@@ -12,20 +12,53 @@ dotenv.config();
 const app = express();
 app.set('trust proxy', 1);
 
-const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN;
+const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN; 
+const ALLOWED_ORIGINS = [
+  CLIENT_ORIGIN,
+  'http://localhost:5173',
+  'http://localhost:3000',
+].filter(Boolean);
 
-const ALLOWED_ORIGINS = [CLIENT_ORIGIN, 'http://localhost:5173', 'http://localhost:3000'].filter(Boolean);
+app.use((req, res, next) => {
+  res.setHeader('Vary', 'Origin');
+
+  const origin = req.headers.origin;
+  if (origin) {
+    try {
+      const host = new URL(origin).hostname;
+      const allowed =
+        ALLOWED_ORIGINS.includes(origin) ||
+        host.endsWith('.netlify.app');
+
+      if (allowed) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+        res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
+        res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+
+      }
+    } catch {
+    }
+  }
+  next();
+});
 
 app.use(cors({
   origin(origin, cb) {
-    if (!origin) return cb(null, true);
-    if (ALLOWED_ORIGINS.includes(origin)) return cb(null, true);
+    if (!origin) return cb(null, true); 
+    try {
+      const host = new URL(origin).hostname;
+      if (ALLOWED_ORIGINS.includes(origin) || host.endsWith('.netlify.app')) {
+        return cb(null, true);
+      }
+    } catch {}
     return cb(new Error('Not allowed by CORS'));
   },
-  credentials: true,
-  methods: ['GET','POST','PUT','DELETE','OPTIONS'],
-  allowedHeaders: ['Content-Type','Authorization','X-Requested-With']
+  credentials: true, 
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
 }));
+
+app.options('*', cors());
 
 app.use(express.json());
 app.use(cookieParser());
