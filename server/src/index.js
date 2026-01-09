@@ -47,7 +47,7 @@ app.use(cors({
     if (!origin) return cb(null, true); 
     try {
       const host = new URL(origin).hostname;
-      if (ALLOWED_ORIGINS.includes(origin) || host.endsWith('.netlify.app')) {
+      if (ALLOWED_ORIGINS.includes(origin) || host.endsWith('.vercel.app')) {
         return cb(null, true);
       }
     } catch {}
