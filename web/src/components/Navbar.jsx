@@ -5,7 +5,7 @@ function Navbar() {
     <header className="flex items-center gap-2 p-4 bg-white shadow">
       <img src={logo} alt="Logo" className="w-20 h-auto" />
       <h1 className="text-2xl font-semibold text-green-700">
-        مكتبة البناء المنهجي
+     مكتبة العطاء
       </h1>
     </header>
   );

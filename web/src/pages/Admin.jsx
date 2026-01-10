@@ -692,7 +692,6 @@ function ResourcesPanel({ scope, subjects, toast, filters, reloadFilters }) {
           toast('تم الحفظ', 'ok');
           load();
         }}
-        // جديد:
         filters={filters}
         reloadFilters={reloadFilters}
       />
@@ -739,7 +738,6 @@ export default function Admin() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[260px,1fr] gap-6">
       <Toasts />
-
       <aside className="rounded-2xl border p-4 bg-white dark:bg-slate-950 grid gap-3">
         <div className="font-bold mb-1">التصفية</div>
 

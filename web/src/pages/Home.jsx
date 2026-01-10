@@ -24,7 +24,7 @@ const copy = {
     steps: [
       { k: "1", t: "اختر العلم والمقرر",   d: "ابدأ من العلم أو المستوى المناسب لك." },
       { k: "2", t: "حمّل النسخة", d: "حمل النسخة المناسبة من المقررات." },
-      { k: "3", t: "أضف / اقترح ملفًا",    d: "ساهم في إثراء الأرشيف المنهجي الموحّد." },
+      { k: "3", t: "أضف ملفًا",    d: "ساهم في إثراء الأرشيف المنهجي الموحّد." },
     ],
     button: "انتقل إلى الأرشيف المنظَّم",
   },
@@ -83,7 +83,7 @@ function HeroLanding() {
           </div>
 
           <h1 className="text-4xl md:text-6xl font-extrabold leading-tight drop-shadow-lg max-w-5xl">
-            منصّة <span className="text-emerald-400">مكتبة البناء المنهجي</span> لتجميع ملفات الدراسة
+            منصّة <span className="text-emerald-400">مكتبة العطاء</span> لتجميع ملفات الدراسة
           </h1>
 
           <p className="mt-5 text-lg md:text-xl text-white/95 max-w-3xl leading-relaxed">
@@ -102,7 +102,7 @@ function HeroLanding() {
               href="/admin"
               className="px-6 py-3 rounded-xl font-semibold border border-white/40 bg-white/10 hover:bg-white/20 text-white transition"
             >
-              ارفع / اقترح ملفًا
+              ارفع المقررات
             </a>
           </div>
         </div>
@@ -185,7 +185,7 @@ export default function Home() {
 
 
       <footer className="mx-auto max-w-7xl px-4 pb-10 text-sm text-slate-600 dark:text-slate-400 flex items-center justify-between border-t border-slate-200 dark:border-slate-800 pt-6">
-        <span>© {new Date().getFullYear()} مكتبة البناء المنهجي</span>
+        <span>© {new Date().getFullYear()} مكتبة العطاء</span>
         <div className="flex gap-4">
           <a className="hover:text-sky-600 dark:hover:text-sky-400">
             الخصوصية

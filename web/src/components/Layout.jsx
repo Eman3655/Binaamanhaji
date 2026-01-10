@@ -1,6 +1,7 @@
 // src/layouts/Layout.jsx
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
+import logo from '../assets/logo2.png'; 
 
 const API = import.meta.env.VITE_API_BASE || "http://localhost:4000/api";
 
@@ -104,17 +105,13 @@ export default function Layout({ children }) {
             </button>
 
             <Link to="/" className="flex items-center gap-2">
-              <div className="size-9 rounded-full bg-emerald-400/15 ring-1 ring-emerald-400/30 flex items-center justify-center">
-                <svg viewBox="0 0 64 64" className="w-5 h-5" aria-hidden="true">
-                  <g fill="#22c55e">
-                    <path d="M32 10c6 6 10 9 10 18v3h-4v-3c0-6-3-9-6-12-3 3-6 6-6 12v3h-4v-3c0-9 4-12 10-18z" />
-                    <circle cx="40" cy="12" r="3" />
-                    <path d="M8 40c6-4 14-6 24-6s18 2 24 6v8c-7-4-15-6-24-6s-17 2-24 6v-8z" />
-                  </g>
-                </svg>
-              </div>
+            <img
+                src={logo}
+                alt="Logo"
+                className="w-10 h-auto"
+              />
               <div className="text-lg font-semibold tracking-tight text-white">
-                مكتبة البناء المنهجي
+                مكتبة العطاء
               </div>
             </Link>
             
