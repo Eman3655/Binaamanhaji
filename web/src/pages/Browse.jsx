@@ -57,7 +57,7 @@ export default function Browse() {
       setQ(usp.get('q') || '');
       setTagsInput(usp.get('tags') || '');
       setSort(usp.get('sort') || 'relevance');
-      setView(usp.get('view') || 'grid');
+      setView(usp.get('view') || 'list');
     } catch {}
   }, []);
 
@@ -249,7 +249,7 @@ export default function Browse() {
           </div>
         </div>
 
-        
+
         {loading ? (
           <ResultsSkeleton view={view} />
         ) : rows.length === 0 ? (
