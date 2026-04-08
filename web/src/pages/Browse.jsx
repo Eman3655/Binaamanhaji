@@ -249,6 +249,7 @@ export default function Browse() {
           </div>
         </div>
 
+        
         {loading ? (
           <ResultsSkeleton view={view} />
         ) : rows.length === 0 ? (
