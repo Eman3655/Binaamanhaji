@@ -34,7 +34,7 @@ export default function Browse() {
   const debouncedQ = useDebounce(q, 500);
   const [tagsInput, setTagsInput] = React.useState('');
   const [sort, setSort] = React.useState('relevance');
-  const [view, setView] = React.useState('grid');
+  const [view, setView] = React.useState('list');
 
   const [rows, setRows] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
